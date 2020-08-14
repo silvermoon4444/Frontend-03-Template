@@ -12,16 +12,13 @@ http.createServer((req, res) => {
         body=Buffer.concat(body).toString();
         console.log('body',body);
         res.writeHead(200,{'Content-Type':'text-html'});
-        res.end(`<html lang="en">
-        <head>
-            <meta charset="UTF-8"/>
-            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-            <title>Document</title>
-        </head>
-        <body>
-            
-        </body>
-        </html>`);
+        res.end(`<li class="li_frist">
+        <div>
+            <p><a href="javascript:void(0)" title="热点信息">
+                    <font color="#ffffff" style="font-size:18px;"><b>热点信息</b></font>
+                </a></p>
+        </div>
+    </li>`);
     });
 }).listen(8088);
 

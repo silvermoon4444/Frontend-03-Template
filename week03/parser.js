@@ -1,31 +1,32 @@
 const EOF = Symbol('EOF')
 let currentToken = null
+let currentAttr = null
 
 function emit(token) {
     console.log(token);
 }
 
 
-function data(char) {
-    if (char === '<') {
+function data(c) {
+    if (c === '<') {
         return openTag;
     }
-    else if (char === 'EOF') {
-        emit({ type: 'EOF', text: char })
+    else if (c === 'EOF') {
+        emit({ type: 'EOF', text: c })
         return;
     }
     else {
-        emit({ type: 'text', text: char })
+        emit({ type: 'text', text: c })
         return data
     }
 }
 
-function openTag(char) {
-    if (char.match(/^[a-zA-Z]$/)) {
+function openTag(c) {
+    if (c.match(/^[a-zA-Z]$/)) {
         currentToken = { type: 'startTag', tagChar: '' }
-        return startTag(char);
+        return startTag(c);
     }
-    else if (char === '/') {
+    else if (c === '/') {
         return endTag
     }
     else {
@@ -33,19 +34,19 @@ function openTag(char) {
     }
 }
 
-function startTag(char) {
-    if (char.match(/^[a-zA-Z]$/)) {
-        currentToken.tagChar += char
+function startTag(c) {
+    if (c.match(/^[a-zA-Z]$/)) {
+        currentToken.tagChar += c
         return startTag
     }
-    else if (char.match(/^[\t\n\f ]$/)) {
-        return attrTag
+    else if (c.match(/^[\t\n\f ]$/)) {
+        return beforeAttrTag
     }
 
-    else if (char === '/') {
+    else if (c === '/') {
         return selfTag
     }
-    else if (char === '>') {
+    else if (c === '>') {
         emit(currentToken)
         return data
     }
@@ -56,54 +57,103 @@ function startTag(char) {
 }
 
 
-function endTag(char) {
-    if (char.match(/^[a-zA-Z]$/)) {
+function endTag(c) {
+    if (c.match(/^[a-zA-Z]$/)) {
         currentToken = { type: 'endTag', tagChar: '' }
-        return startTag(char)
+        return startTag(c)
     }
-    else if (char === '>') {
+    else if (c === '>') {
         emit(currentToken)
         return data
     }
 }
 
-function attrTag(char) {
-    if (char.match(/^[\t\n\f ]$/)) {
-        return attrTag
+function beforeAttrTag(c) {
+    if (c.match(/^[\t\n\f ]$/)) {
+        return beforeAttrTag
     }
-    else if (char.match(/^[a-zA-Z]$/)) {
-        return attrTag
-    }
-    else if (char === '=') {
-        return attrTag
-    }
-    else if (char === '/') {
+    else if (c === '/') {
         return selfTag
     }
-    else if (char === '>') {
-        return startTag(char)
+    else if (c === '>') {
+        return startTag(c)
     }
     else {
-        return attrTag
+        currentAttr = { tagName: '', tagVal: '' }
+        return attrName(c)
     }
 }
 
-function selfTag(char) {
-    if (char === '>') {
-        currentToken.isFinished = true
-        return startTag(char)
+function attrName(c) {
+    if (c === '=') {
+        return beforeAttrVal
+    } else {
+        currentAttr.tagName += c
+        return attrName
     }
 }
+
+function beforeAttrVal(c) {
+    if (c === '\'') {
+        return singleAttrVal
+    }
+    else if (c === '\"') {
+        return dbSingleAttrVal
+    }
+    else {
+        return unQuoted
+    }
+}
+
+function singleAttrVal(c) {
+    if (c === '\'') {
+        return afterAttr
+    } else {
+        currentAttr.tagVal += c
+        return singleAttrVal
+    }
+}
+
+function dbSingleAttrVal(c) {
+    if (c === '\"') {
+        return afterAttr
+    } else {
+        currentAttr.tagVal += c
+        return dbSingleAttrVal
+    }
+}
+
+function unQuoted(c) {
+    if (c.match(/^[\t\n\f ]$/)) {
+        return afterAttr
+    } else {
+        currentAttr.tagVal += c
+        return unQuoted
+    }
+}
+
+function afterAttr(c) {
+    currentToken[currentAttr.tagName] = currentAttr.tagVal
+    return beforeAttrTag(c)
+}
+
+function selfTag(c) {
+    if (c === '>') {
+        currentToken.isFinished = true
+        return startTag(c)
+    }
+}
+
 
 module.exports.parseHTML = function parseHTML(html) {
     // console.log('html', html);
     let state = data;
-    for (const char of html) {
+    for (const c of html) {
         // if (state) {
-        //     let temState = state(char)
+        //     let temState = state(c)
         //     state = temState === void 0 ? state : temState
         // }
-        state = state(char)
+        state = state(c)
     }
     state(EOF)
 }

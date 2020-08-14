@@ -45,11 +45,14 @@ ${this.bodyText}`;
           }
         );
         client.on("data", (data) => {
-          // console.log(data.toString());
+          console.log(data.toString());
           pareser.receive(data.toString());
           if (pareser.isFinished) {
             resolve(pareser.respose)
             client.end();
+          }
+          else{
+            reject('No isFinished')
           }
         });
         client.on("error", (error) => {
@@ -170,6 +173,9 @@ class BodyParser {
     this.content = []
   }
   receiveChar(char) {
+    if(this.length===10){
+      debugger
+    }
     if (this.current === this.LENGTH_WAIT) {
       if (char === '\r') {
         if (this.length === 0) {
