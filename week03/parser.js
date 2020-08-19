@@ -1,17 +1,72 @@
+const css = require('css')
+
 const EOF = Symbol('EOF')
 let currentToken = null
 let currentAttr = null
 
-function emit(token) {
-    console.log(token);
+const stack = [{ tagName: 'document', child: [] }]
+let currentText = null
+const rules = []
+
+function cssParse(content) {
+    let ast = css.parse(content)
+    // console.log(JSON.stringify(ast, null, 4));
+    rules.push(...ast.stylesheet.rules)
+    console.log(JSON.stringify(rules, null, 4));
 }
+function computeCss(element){
+}
+
+function emit(token) {
+    let top = stack[stack.length - 1]
+    if (token.type === 'startTag') {
+        let element = { type: 'element', child: [], attr: [] }
+        element.tagChar = token.tagChar
+        for (const key in token) {
+            if (key !== 'type' && key !== 'tagChar') {
+                element.attr.push({ name: key, value: token[key] })
+            }
+        }
+        computeCss(element)
+        element.parent = top
+        top.child.push(element)
+        if (!token.isFinished) {
+            stack.push(element)
+        }
+        currentText = null
+    }
+    else if (token.type === 'endTag') {
+        if (token.tagChar === top.tagChar) {
+            if (token.tagChar === 'style') {
+                cssParse(currentText.content)
+            }
+            stack.pop()
+        }
+        else {
+            throw new Error('Start tag and End tag dont\'t Match')
+        }
+        currentText = null
+    }
+    else if (token.type === 'text') {
+        if (currentText === null) {
+            currentText = {
+                type: 'text',
+                content: ''
+            }
+            top.child.push(currentText)
+        }
+        currentText.content += token.text
+    }
+    // console.log(stack);
+}
+
 
 
 function data(c) {
     if (c === '<') {
         return openTag;
     }
-    else if (c === 'EOF') {
+    else if (c === EOF) {
         emit({ type: 'EOF', text: c })
         return;
     }
@@ -146,7 +201,6 @@ function selfTag(c) {
 
 
 module.exports.parseHTML = function parseHTML(html) {
-    // console.log('html', html);
     let state = data;
     for (const c of html) {
         // if (state) {
@@ -156,5 +210,6 @@ module.exports.parseHTML = function parseHTML(html) {
         state = state(c)
     }
     state(EOF)
+    // console.log(stack[0]);
 }
 
