@@ -12,9 +12,114 @@ function cssParse(content) {
     let ast = css.parse(content)
     // console.log(JSON.stringify(ast, null, 4));
     rules.push(...ast.stylesheet.rules)
-    console.log(JSON.stringify(rules, null, 4));
+    // console.log(JSON.stringify(rules, null, 4));
 }
-function computeCss(element){
+
+function match(element, selector) {
+    if (!element.attr || !selector) {
+        return false
+    }
+    else {
+        const tag = selector.charAt(0)
+        if (tag === '#') {
+            const id = element.attr.filter(v => v.name === 'id')
+            if (id.length && id[0].value === selector.slice(1)) {
+                return true
+            } else {
+                return false
+            }
+        }
+        else if (tag === '.') {
+            const className = element.attr.filter(v => v.name === 'class')
+            if (className.length && className[0].value === selector.slice(1)) {
+                return true
+            } else {
+                return false
+            }
+        }
+        else {
+            if (element.tagChar === selector) {
+                return true
+            }
+            else {
+                return false
+            }
+        }
+    }
+}
+
+function specificity(selector) {
+    let sp = [0, 0, 0, 0]
+
+    for (const sel of selector.split(' ')) {
+        const tag = sel.charAt(0)
+        if (tag === '#') {
+            sp[1]++
+        }
+        else if (tag === '.') {
+            sp[2]++
+        }
+        else {
+            sp[3]++
+        }
+    }
+    return sp
+
+}
+
+function compare(prevSP, nextSP) {
+    for (let i = 0; i < prevSP.length; i++) {
+        if ((i === prevSP.length - 1) || (prevSP[i] - nextSP[i])) {
+            return prevSP[i] - nextSP[i]
+        }
+    }
+}
+
+
+function computeCSS(element) {
+    if (!element.computedStyle) {
+        element.computedStyle = {}
+    }
+    const elements = stack.slice().reverse()
+    for (const rule of rules) {
+        const selectors = rule.selectors[0].split(' ').reverse()
+        if (!match(element, selectors[0])) {
+            continue
+        }
+        let matched = false
+        let j = 1
+        for (var i = 0; i < elements.length; i++) {
+            if (match(elements[i], selectors[j])) {
+                j++
+            }
+        }
+        if (j === selectors.length) { //?为什么老师的是>=呢？
+            matched = true
+        }
+        if (matched) {
+            let computedStyle = element.computedStyle
+            let sp = specificity(selectors[0])
+            for (const declaration of rule.declarations) {
+                if (!computedStyle.specificity) {
+                    computedStyle.specificity = sp
+                    computedStyle[declaration.property] = declaration.value
+                }
+                else {
+                    if (compare(computedStyle.specificity, sp) <= 0) {
+                        computedStyle.specificity = sp
+                        computedStyle[declaration.property] = declaration.value
+                    }
+                    else if (!computedStyle[declaration.property]) {
+                        computedStyle[declaration.property] = declaration.value
+                    }
+                }
+
+            }
+
+        }
+
+    }
+
 }
 
 function emit(token) {
@@ -27,8 +132,8 @@ function emit(token) {
                 element.attr.push({ name: key, value: token[key] })
             }
         }
-        computeCss(element)
         element.parent = top
+        computeCSS(element)
         top.child.push(element)
         if (!token.isFinished) {
             stack.push(element)
@@ -210,6 +315,6 @@ module.exports.parseHTML = function parseHTML(html) {
         state = state(c)
     }
     state(EOF)
-    // console.log(stack[0]);
+    console.log(stack);
 }
 

@@ -21,6 +21,11 @@ decode-uri-component@^0.2.0:
   resolved "https://registry.npm.taobao.org/decode-uri-component/download/decode-uri-component-0.2.0.tgz#eb3913333458775cb84cd1a1fae062106bb87545"
   integrity sha1-6zkTMzRYd1y4TNGh+uBiEGu4dUU=
 
+fs@^0.0.1-security:
+  version "0.0.1-security"
+  resolved "https://registry.npm.taobao.org/fs/download/fs-0.0.1-security.tgz#8a7bd37186b6dddf3813f23858b57ecaaf5e41d4"
+  integrity sha1-invTcYa23d84E/I4WLV+yq9eQdQ=
+
 http@^0.0.1-security:
   version "0.0.1-security"
   resolved "https://registry.npm.taobao.org/http/download/http-0.0.1-security.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fhttp%2Fdownload%2Fhttp-0.0.1-security.tgz#3aac09129d12dc2747bbce4157afde20ad1f7995"

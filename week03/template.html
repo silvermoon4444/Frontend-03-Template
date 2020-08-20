@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -6,41 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <style>
-        #box {
-            width: 100%;
-            height: 500px;
+        body #box {
+            width: 100px;
+            height: 100px;
             background-color: aqua;
-            overflow: auto;
-            position: absolute;
-            top: 0;
-            left: 0;
         }
 
-        #son {
-            width: 100%;
-            height: 1000px;
+        body img {
+            width: 500px;
+            height: 100px;
         }
 
-        #s1 {
-            width: 100%;
-            height: 1000px;
+        body img {
+            width: 500px;
+            height: 500px;
+            box-shadow: h-shadow v-shadow blur spread color inset;
         }
     </style>
 </head>
 
 <body>
-    <div id='box'>
-        <div id="s1"></div>
-        <div id="son">
-
-        </div>
-    </div>
+    <div id='box'></div>1
+    <img id='img' src="./wj.jpg" />2
 </body>
-<script>
-    var box = document.getElementById('box')
-    box.onscroll = function () {
-        console.log(123);
-    }
-</script>
 
 </html>
