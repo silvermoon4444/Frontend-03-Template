@@ -213,7 +213,7 @@ class BodyParser {
 
 }
 
-void (async function () {
+void async function () {
   let request = new Request({
     host: "127.0.0.1",
     port: "8088",
@@ -229,4 +229,4 @@ void (async function () {
   let respose = await request.send();
   parser.parseHTML(respose.body)
   // console.log('✨respose\n', respose);
-})();
+}();

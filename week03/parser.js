@@ -1,5 +1,7 @@
 const css = require('css')
 
+const layout = require('./layout')
+
 const EOF = Symbol('EOF')
 let currentToken = null
 let currentAttr = null
@@ -145,6 +147,7 @@ function emit(token) {
             if (token.tagChar === 'style') {
                 cssParse(currentText.content)
             }
+            layout(top)
             stack.pop()
         }
         else {
