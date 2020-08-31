@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    #box{
+        display: flex;
+        /* justify-content: center; */
+        /* justify-content: space-between; */
+        justify-content: space-around;
+        flex-wrap: wrap;
+        align-content: stretch;
+        height: 1000px;
+    }
+    .son{
+        width: 50%;
+        /* height: 50px; */
+    }
+    .son:nth-child(2n){
+        background-color: aqua;
+    }
+    .son:nth-child(2n+1){
+        background-color: brown;
+    }
+</style>
+<body>
+    <div id="box">
+        <div class="son">1</div>
+        <div class="son">2</div>
+        <div class="son">3</div>
+        <div class="son">4</div>
+    </div>
+</body>
+</html>
