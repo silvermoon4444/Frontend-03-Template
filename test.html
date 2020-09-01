@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    #fa {
+      display: flex;
+      justify-content: flex-end;
+      flex-direction:row;
+      height: 200px;
+    }
+    .son {
+      height: 50px;
+      /* flex: 1; */
+      font-weight: 900;
+      font-size: 20px;
+      color: red;
+    }
+    .son:nth-child(2n){
+        background-color:aqua
+    }
+    .son:nth-child(2n+1){
+        background-color:rebeccapurple
+    }
+  </style>
+  <body>
+    <div id="fa">
+        <div style="width: 50%;background-color: blue;"></div>
+      <div class="son">1</div>
+      <div class="son">2</div>
+      <div class="son">3</div>
+    </div>
+  </body>
+</html>
