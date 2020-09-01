@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    :root {
+        --cc: calc(16px*5)
+    }
+
+    /* h1+div {
+        font-size: var(--cc);
+    } */
+    /* div[class='son']{
+        color: aqua;
+    } */
+
+
+    /* #s.son.son2 {
+        color: red;
+    }
+    #s:not(.a) {
+        color: green;
+    } */
+    /* 
+    :link{
+        font-size: xx-large;
+        color: red;
+    }
+    :visited{
+        font-size: xx-large;
+        color: yellow;
+    }
+    :hover{
+        font-size: xx-large;
+        color: green;
+    }
+    :active{
+        font-size: xx-large;
+        color: blue;
+    }
+    :any-link{
+        font-size: xx-large;
+        color: aqua;
+    } */
+    h1 {
+        display: none;
+    }
+
+    h1:target {
+        display: block;
+        color: blue;
+    }
+    div.pp::first-letter{
+        background-color: salmon;
+    }
+</style>
+
+<body>
+    <div class="son son2">
+        0
+    </div>
+    <h1 id='h1'>h1</h1>
+    <div class="son son2" id="s">
+        1
+    </div>
+    <div class="son2">2</div>
+    <a href="#" class="a">aaa</a>
+    <a href="#" class="b">aaa</a>
+    <a href="www.baidu.com" class="b">aaa</a>
+    <div class="pp">
+        <p>This is a paragraph.</p>2
+        <p>This is a paragraph.</p>2
+        <p>This is a paragraph.</p>2
+    </div>
+</body>
+<script>
+    function re() {
+        return new Promise((resolve, reject) => {
+            console.log(1);
+            resolve(2)
+            console.log(3);
+        })
+    }
+    void async function () {
+        console.log(await re());
+        console.log(4);
+    }()
+</script>
+
+</html>
