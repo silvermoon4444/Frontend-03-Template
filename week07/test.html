@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    @media screen {
+
+    }
+    #box{
+        height: 100px;
+        background-color: #000;
+    }
+    .son{
+        height: 50px;
+        background-color: aqua;
+    }
+    #box::after{
+        height: 10px;
+        content: 'after';
+        width: 100px;
+        background-color: aqua;
+    }
+</style>
+
+<body>
+    <div id="box">
+        <div class="son" style="background-color: red;">1</div>
+        <div class="son" style="background-color: yellow;">2</div>
+        <div class="son" style="background-color: green;">3</div>
+        <div class="son" style="background-color: blue;">4</div>
+        <div class="son" style="background-color: black;">5</div>
+    </div>
+    <img src="./wj.jpg" alt="" width="800px">
+    
+</body>
+<script>
+    let box=document.getElementById('box')
+
+    //常规方法倒序
+    // let len=box.childElementCount
+    // while(len-->0){
+    //     box.appendChild(box.children[len])
+    // }
+    
+    //range倒序
+    // let range=new Range()
+    // range.selectNodeContents(box)
+    // let fra=range.extractContents()
+    // let l=fra.children.length
+    // while(l-->0){
+    //     fra.appendChild(fra.children[l])
+    // }
+    // box.appendChild(fra)
+    let l=box.children.length;
+    // let temp=document.createElement('div')
+    // while(l--){
+    //  temp.appendChild(box.children[l])   
+    // }
+</script>
+</html>
