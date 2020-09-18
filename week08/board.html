@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .cell {
+        width: 100px;
+        height: 100px;
+        background-color: green;
+        display: inline-block;
+        border: 1px solid white;
+        vertical-align: middle;
+
+        line-height: 100px;
+        font-size: 50px;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    #board {
+        text-align: center;
+    }
+</style>
+
+<body>
+    <div id="board">
+    </div>
+</body>
+<script>
+    let pattern = [
+        [1, 0, 0],
+        [2, 0, 0],
+        [0, 0, 0],
+    ]
+    let color = 1
+    function show() {
+        let fa = document.getElementById('board')
+        fa.innerHTML = ''
+        for (let hang = 0; hang < pattern.length; hang++) {
+            for (let lie = 0; lie < pattern[hang].length; lie++) {
+                let cell = document.createElement('div')
+                cell.classList.add('cell')
+                cell.innerText = pattern[hang][lie] === 2 ? '❌' : pattern[hang][lie] === 1 ? '⭕' : ''
+                cell.addEventListener('click', () => move(hang, lie))
+                fa.appendChild(cell)
+            }
+            fa.appendChild(document.createElement('br'))
+        }
+    }
+
+    // 落子
+    function move(h, l) {
+        pattern[h][l] = color
+        show()
+        if (check(color,pattern)) {
+            pattern[h][l] === 2 ? alert('Xwin') : alert('Owin')
+            pattern = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+        }
+        color = 3 - color
+        if (check(color,pattern)) {
+            pattern[h][l] === 2 ? alert('X Will win') : alert('O Will win')
+        }
+    }
+
+    function willWin(color,pattern) {
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                if (!pattern[i, j]) {
+                    const tem = clone(pattern)
+                    tem[i,j]=color
+                    check(color,tem)
+                }
+            }
+        }
+    }
+
+    function clone(pattern) {
+        return [...pattern]
+    }
+
+    //是否取得胜利
+    function check(color,pattern) {
+        //横向是否都一样
+        {
+            for (let i = 0; i < 3; i++) {
+                let win = true
+                for (let j = 0; j < 3; j++) {
+                    if (pattern[i][j] !== color) {
+                        win = false
+                    }
+                }
+                if (win) {
+                    return true
+                }
+            }
+        }
+        //纵向是否都一样
+        {
+            for (let i = 0; i < 3; i++) {
+                let win = true
+                for (let j = 0; j < 3; j++) {
+                    if (pattern[j][i] !== color) {
+                        win = false
+                    }
+                }
+                if (win) {
+                    return true
+                }
+            }
+        }
+        //左斜杠是否都一样
+        {
+            let win = true
+            for (let i = 0; i < 3; i++) {
+                if (pattern[i][2 - i] !== color) {
+                    win = false
+                }
+            }
+            if (win) {
+                return true
+            }
+        }
+        //右斜杠是否都一样
+        {
+            let win = true
+            for (let i = 0; i < 3; i++) {
+                if (pattern[i][i] !== color) {
+                    win = false
+                }
+            }
+            if (win) {
+                return true
+            }
+        }
+    }
+
+    show()
+</script>
+
+</html>

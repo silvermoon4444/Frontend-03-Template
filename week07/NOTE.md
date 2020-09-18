@@ -126,6 +126,55 @@ var w=window.open(url,'_blank','width=100,height=100,left=100,right=100')
 + scrollLeft
 + scrollWidth
 + scrollHeight
-+ scroll(x,y)   
-+ scrollBy(x,y) 
-+ scrollInteoView() 滚动到可视区某个位置
++ scroll(x,y)   相对盒子左上角位置滚动到多少
++ scrollBy(x,y) 相对**当前位置**滚动到多少
++ scrollInteoView() 元素滚动到可视区
+#### window scroll
++ scrollX == scrollTop
++ scrollY == scrollLeft
++ scroll(x,y)
++ scrollBy(x,y)
+### layout
+#### element.getClientRects()/getBoundingClientRect()
++ getClientRects() 返回元素里面的所有盒子
++ getBoundingClientRect() 返回一个包裹了当前元素盒子
+```
+#box{
+        width: 100px;
+    }
+span{
+        background-color: brown;
+    }
+span::before{
+        content: 'before before before before before before';
+        background-color: aqua;
+}
+<div id="box">
+    111
+    <span id='span'>内容 内容 内容 内容 内容 内容 内容 内容 内容 内容 内容 内容 内容</span>
+</div>
+```
+```
+let box = document.getElementById('span')
+```
++ 结果
+--------------
+  ![运行结果](./getClientRects.png)
++ **box.getClientRects()**
++ + DOMRectList {0: DOMRect, 1: DOMRect, 2: DOMRect, 3: DOMRect, 4: DOMRect, 5: DOMRect, 6: DOMRect, 7: DOMRect, 8: DOMRect, 9: DOMRect, 10: DOMRect, length: 11}
++ **box.getBoundingClientRect()**
++ + DOMRect {x: 8, y: 8, width: 89.46875, height: 231, top: 8, …}
+--------------
+## 标准化组织
+> khronos
+> > WebGL
+> ECMA
+> >ECMAScript
+> WHATWG [网站总是最新版]
+> > HTML
+> W3C
+> > webaudio
+> > CG(社区组织)/WG职业工作组织
+
++ Object.getOwnPropertyNames(obj) 返回对象的所有自身属性的属性名（包括不可枚举属性[不能通过for...of]取到的，但不包括Symbol值作为名称的属性）组成的数组。
+## a.__proto__ a为函数时 用此方法判断加instanceof不能判断类型

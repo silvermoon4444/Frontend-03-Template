@@ -1,27 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
 <style>
-    @media screen {
+    #box {
+        /* width: 100px; */
+        height: 500px;
+        overflow: auto;
+    }
 
-    }
-    #box{
-        height: 100px;
-        background-color: #000;
-    }
-    .son{
-        height: 50px;
+    .son {
+        height: 200px;
         background-color: aqua;
     }
-    #box::after{
+
+    /* #box::after {
         height: 10px;
         content: 'after';
         width: 100px;
         background-color: aqua;
+    } */
+    span {
+        background-color: brown;
+    }
+
+    span::before {
+        content: 'before before before before before before';
+        background-color: aqua;
+    }
+
+    .tt {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+    }
+
+    .cc {
+        position: static;
+        ;
     }
 </style>
 
@@ -29,22 +50,40 @@
     <div id="box">
         <div class="son" style="background-color: red;">1</div>
         <div class="son" style="background-color: yellow;">2</div>
-        <div class="son" style="background-color: green;">3</div>
+        <div id="oo" class="son" style="background-color: green;">3</div>
         <div class="son" style="background-color: blue;">4</div>
         <div class="son" style="background-color: black;">5</div>
+        <div class="son" style="background-color: black;">5</div>
+        <div class="son" style="background-color: black;">5</div>
+        <div class="son" style="background-color: black;">5</div>
+        <div class="son" style="background-color: black;">5</div>
+        <div class="son" style="background-color: black;">5</div>
+        <div class="son" style="background-color: black;">5</div>
+        <!-- 111 -->
+        <!-- <span id='span'>内容 内容 内容 内容 内容 内容 内容 内容 内容 内容 内容 内容 内容</span> -->
     </div>
-    <img src="./wj.jpg" alt="" width="800px">
-    
+    <!-- <img src="./wj.jpg" alt="" width="800px"> -->
+
 </body>
 <script>
-    let box=document.getElementById('box')
-
+    // let box = document.getElementById('box')
+    // let oo=document.getElementById('oo')
+    // let t=oo.offsetTop
+    // box.addEventListener('scroll',()=>{
+    //     if(box.scrollTop>t){
+    //         oo.classList.remove('cc')
+    //         oo.classList.add('tt')
+    //     }else{
+    //         oo.classList.remove('tt')
+    //         oo.classList.add('cc')
+    //     }
+    // })
     //常规方法倒序
     // let len=box.childElementCount
     // while(len-->0){
     //     box.appendChild(box.children[len])
     // }
-    
+
     //range倒序
     // let range=new Range()
     // range.selectNodeContents(box)
@@ -54,10 +93,21 @@
     //     fra.appendChild(fra.children[l])
     // }
     // box.appendChild(fra)
-    let l=box.children.length;
+    // let l = box.children.length;
     // let temp=document.createElement('div')
     // while(l--){
     //  temp.appendChild(box.children[l])   
     // }
+
+    // window属性筛选
+    // const w = Object.getOwnPropertyNames(window)
+    // let a= w.filter(e => {
+    //     try {
+    //         return !(window[e].prototype instanceof Node)
+    //     } catch (err) {
+    //         return true
+    //     }
+    // }).filter(e=>e!=='Node')
 </script>
+
 </html>
