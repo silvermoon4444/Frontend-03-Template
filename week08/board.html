@@ -32,12 +32,12 @@
 </body>
 <script>
     let pattern = [
-        [1, 0, 0],
-        [2, 0, 0],
+        [0, 2, 0],
+        [0, 1, 0],
         [0, 0, 0],
     ]
     let color = 1
-    function show() {
+    function show(pattern) {
         let fa = document.getElementById('board')
         fa.innerHTML = ''
         for (let hang = 0; hang < pattern.length; hang++) {
@@ -45,7 +45,7 @@
                 let cell = document.createElement('div')
                 cell.classList.add('cell')
                 cell.innerText = pattern[hang][lie] === 2 ? '❌' : pattern[hang][lie] === 1 ? '⭕' : ''
-                cell.addEventListener('click', () => move(hang, lie))
+                cell.addEventListener('click', () => move(lie, hang))
                 fa.appendChild(cell)
             }
             fa.appendChild(document.createElement('br'))
@@ -53,37 +53,72 @@
     }
 
     // 落子
-    function move(h, l) {
+    function move(l, h) {
         pattern[h][l] = color
-        show()
-        if (check(color,pattern)) {
+        show(pattern)
+        if (check(color, pattern)) {
             pattern[h][l] === 2 ? alert('Xwin') : alert('Owin')
             pattern = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
         }
         color = 3 - color
-        if (check(color,pattern)) {
+        if (check(color, pattern)) {
             pattern[h][l] === 2 ? alert('X Will win') : alert('O Will win')
         }
     }
 
-    function willWin(color,pattern) {
+    function willWin(color, pattern) {
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
-                if (!pattern[i, j]) {
+                if (!pattern[i][j]) {
+                    console.log('❤');
                     const tem = clone(pattern)
-                    tem[i,j]=color
-                    check(color,tem)
+                    tem[i][j] = color
+                    if (check(color, tem)) {
+                        return [j, i]
+                    }
                 }
             }
         }
+        return false
     }
 
     function clone(pattern) {
-        return [...pattern]
+        // console.log(pattern);
+        return JSON.parse(JSON.stringify(pattern))
     }
 
+    function bestChoice(color, pattern) {
+        let p;
+        if (p = willWin(color, pattern)) {
+            return {
+                ponit: p,
+                result: 1
+            }
+        }
+        let result = -2
+        let ponit = null;
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                if (!pattern[i][j]) {
+                    let tem = clone(pattern)
+
+                    let r = bestChoice(3 - color, tem).result
+                    if (-r > result) {
+                        result = -r;
+                        ponit = [j, i]
+                    }
+                }
+            }
+        }
+        return {
+            point: ponit,
+            result: ponit ? result : 0
+        }
+    }
+
+
     //是否取得胜利
-    function check(color,pattern) {
+    function check(color, pattern) {
         //横向是否都一样
         {
             for (let i = 0; i < 3; i++) {
@@ -98,6 +133,9 @@
                 }
             }
         }
+
+
+
         //纵向是否都一样
         {
             for (let i = 0; i < 3; i++) {
@@ -138,7 +176,11 @@
         }
     }
 
-    show()
+    show(pattern)
+
+    console.log(bestChoice(color, pattern));
+
+    console.log(pattern);
 </script>
 
 </html>
