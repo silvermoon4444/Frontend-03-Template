@@ -1,186 +1,198 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<style>
+  </head>
+  <style>
     .cell {
-        width: 100px;
-        height: 100px;
-        background-color: green;
-        display: inline-block;
-        border: 1px solid white;
-        vertical-align: middle;
+      width: 100px;
+      height: 100px;
+      background-color: green;
+      display: inline-block;
+      border: 1px solid white;
+      vertical-align: middle;
 
-        line-height: 100px;
-        font-size: 50px;
-        text-align: center;
-        cursor: pointer;
+      line-height: 100px;
+      font-size: 50px;
+      text-align: center;
+      cursor: pointer;
     }
 
     #board {
-        text-align: center;
+      text-align: center;
     }
-</style>
+  </style>
 
-<body>
-    <div id="board">
-    </div>
-</body>
-<script>
+  <body>
+    <div id="board"></div>
+  </body>
+  <script>
     let pattern = [
-        [0, 2, 0],
-        [0, 1, 0],
-        [0, 0, 0],
-    ]
-    let color = 1
+      [0, 0, 0],
+      [0, 0, 0],
+      [0, 0, 0],
+    ];
+    let color = 1;
     function show(pattern) {
-        let fa = document.getElementById('board')
-        fa.innerHTML = ''
-        for (let hang = 0; hang < pattern.length; hang++) {
-            for (let lie = 0; lie < pattern[hang].length; lie++) {
-                let cell = document.createElement('div')
-                cell.classList.add('cell')
-                cell.innerText = pattern[hang][lie] === 2 ? '❌' : pattern[hang][lie] === 1 ? '⭕' : ''
-                cell.addEventListener('click', () => move(lie, hang))
-                fa.appendChild(cell)
-            }
-            fa.appendChild(document.createElement('br'))
+      let fa = document.getElementById("board");
+      fa.innerHTML = "";
+      for (let hang = 0; hang < pattern.length; hang++) {
+        for (let lie = 0; lie < pattern[hang].length; lie++) {
+          let cell = document.createElement("div");
+          cell.classList.add("cell");
+          cell.innerText =
+            pattern[hang][lie] === 2
+              ? "❌"
+              : pattern[hang][lie] === 1
+              ? "⭕"
+              : "";
+          cell.addEventListener("click", () => move(lie, hang));
+          fa.appendChild(cell);
         }
+        fa.appendChild(document.createElement("br"));
+      }
     }
 
     // 落子
     function move(l, h) {
-        pattern[h][l] = color
-        show(pattern)
-        if (check(color, pattern)) {
-            pattern[h][l] === 2 ? alert('Xwin') : alert('Owin')
-            pattern = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
-        }
-        color = 3 - color
-        if (check(color, pattern)) {
-            pattern[h][l] === 2 ? alert('X Will win') : alert('O Will win')
-        }
+      pattern[h][l] = color;
+      // show(pattern);
+      if (check(color, pattern)) {
+        pattern[h][l] === 2 ? alert("Xwin") : alert("Owin");
+        pattern = [
+          [0, 0, 0],
+          [0, 0, 0],
+          [0, 0, 0],
+        ];
+      }
+
+      color = 3 - color;
+      // if (willWin(color, pattern)) {
+      //   pattern[h][l] === 2 ? alert("O Will win") : alert("X Will win");
+      // }
+      // if(color===1){
+          console.log(bestChoice(color,pattern));
+      // }
+      show(pattern);
     }
 
     function willWin(color, pattern) {
-        for (let i = 0; i < 3; i++) {
-            for (let j = 0; j < 3; j++) {
-                if (!pattern[i][j]) {
-                    // console.log('❤');
-                    const tem = clone(pattern)
-                    tem[i][j] = color
-                    if (check(color, tem)) {
-                        return [j, i]
-                    }
-                }
+      for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+          if (!pattern[i][j]) {
+            // console.log('❤');
+            const tem = clone(pattern);
+            tem[i][j] = color;
+            if (check(color, tem)) {
+              return [j, i];
             }
+          }
         }
-        return false
+      }
+      return false;
     }
 
     function clone(pattern) {
-        // console.log(pattern);
-        return JSON.parse(JSON.stringify(pattern))
+      // console.log(pattern);
+      return JSON.parse(JSON.stringify(pattern));// 可以用Object.create(pattern)，节省内存空间
     }
 
     function bestChoice(color, pattern) {
-        let p;
-        if (p = willWin(color, pattern)) {
-            return {
-                ponit: p,
-                result: 1
-            }
-        }
-        let result = -2
-        let ponit = null;
-        for (let i = 0; i < 3; i++) {
-            for (let j = 0; j < 3; j++) {
-                if (!pattern[i][j]) {
-                    let tem = clone(pattern)
-
-                    let r = bestChoice(3 - color, tem).result
-                    if (-r > result) {
-                        result = -r;
-                        ponit = [j, i]
-                    }
-                }
-            }
-        }
+      let p;
+      if ((p = willWin(color, pattern))) {
         return {
-            point: ponit,
-            result: ponit ? result : 0
+          ponit: p,
+          result: 1,
+        };
+      }
+      let result = -2;
+      let ponit = null;
+      for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+          if (!pattern[i][j]) {
+            let tem = clone(pattern);
+            tem[i][j] = color;
+            let r = bestChoice(3 - color, tem).result;
+            if (-r > result) {
+              result = -r;
+              ponit = [j, i];
+            }
+            // if (result === 1) {
+            //   return {
+            //     point: ponit,
+            //     result: ponit ? result : 0,
+            //   };
+            // }
+          }
         }
+      }
+      return {
+        point: ponit,
+        result: ponit ? result : 0,
+      };
     }
-
 
     //是否取得胜利
     function check(color, pattern) {
-        //横向是否都一样
-        {
-            for (let i = 0; i < 3; i++) {
-                let win = true
-                for (let j = 0; j < 3; j++) {
-                    if (pattern[i][j] !== color) {
-                        win = false
-                    }
-                }
-                if (win) {
-                    return true
-                }
+      //横向是否都一样
+      {
+        for (let i = 0; i < 3; i++) {
+          let win = true;
+          for (let j = 0; j < 3; j++) {
+            if (pattern[i][j] !== color) {
+              win = false;
             }
+          }
+          if (win) {
+            return true;
+          }
         }
+      }
 
-
-
-        //纵向是否都一样
-        {
-            for (let i = 0; i < 3; i++) {
-                let win = true
-                for (let j = 0; j < 3; j++) {
-                    if (pattern[j][i] !== color) {
-                        win = false
-                    }
-                }
-                if (win) {
-                    return true
-                }
+      //纵向是否都一样
+      {
+        for (let i = 0; i < 3; i++) {
+          let win = true;
+          for (let j = 0; j < 3; j++) {
+            if (pattern[j][i] !== color) {
+              win = false;
             }
+          }
+          if (win) {
+            return true;
+          }
         }
-        //左斜杠是否都一样
-        {
-            let win = true
-            for (let i = 0; i < 3; i++) {
-                if (pattern[i][2 - i] !== color) {
-                    win = false
-                }
-            }
-            if (win) {
-                return true
-            }
+      }
+      //左斜杠是否都一样
+      {
+        let win = true;
+        for (let i = 0; i < 3; i++) {
+          if (pattern[i][2 - i] !== color) {
+            win = false;
+          }
         }
-        //右斜杠是否都一样
-        {
-            let win = true
-            for (let i = 0; i < 3; i++) {
-                if (pattern[i][i] !== color) {
-                    win = false
-                }
-            }
-            if (win) {
-                return true
-            }
+        if (win) {
+          return true;
         }
+      }
+      //右斜杠是否都一样
+      {
+        let win = true;
+        for (let i = 0; i < 3; i++) {
+          if (pattern[i][i] !== color) {
+            win = false;
+          }
+        }
+        if (win) {
+          return true;
+        }
+      }
     }
 
-    show(pattern)
+    show(pattern);
 
-    console.log(bestChoice(color, pattern));
-
-    console.log(pattern);
-</script>
-
+    console.log(bestChoice(color, pattern).point);
+  </script>
 </html>
