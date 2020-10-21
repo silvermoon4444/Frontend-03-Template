@@ -6,32 +6,22 @@
     <title>Document</title>
   </head>
   <style>
-    #fa {
-      display: flex;
-      justify-content: flex-end;
-      flex-direction:row;
-      height: 200px;
-    }
-    .son {
+    .c1,.c2{
       height: 50px;
-      /* flex: 1; */
-      font-weight: 900;
-      font-size: 20px;
-      color: red;
     }
-    .son:nth-child(2n){
-        background-color:aqua
+    .c1{
+      background-color: aqua;
     }
-    .son:nth-child(2n+1){
-        background-color:rebeccapurple
+    .c2{
+      background-color: brown;
+    }
+    *{
+      margin: 0;
+      padding: 0;
     }
   </style>
   <body>
-    <div id="fa">
-        <div style="width: 50%;background-color: blue;"></div>
-      <div class="son">1</div>
-      <div class="son">2</div>
-      <div class="son">3</div>
-    </div>
+    <div class="c1"></div>
+    <div class="c2"></div>
   </body>
 </html>
