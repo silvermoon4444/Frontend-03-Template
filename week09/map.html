@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
 <style>
-    .cell{
-        display:inline-block;
-        line-height: 7px;
+    .cell {
+        display: inline-block;
+        /* line-height: 7px; */
         width: 6px;
         height: 6px;
         background-color: gray;
@@ -16,22 +17,40 @@
         border-right: solid 1px white;
         vertical-align: middle;
     }
-    #box{
+
+    #box {
         width: 700px;
         margin: 0 auto;
         font-size: 0;
     }
-    *{
+
+    * {
         margin: 0;
         padding: 0;
     }
-    .color-map{
+
+    .color-map {
         background-color: aqua;
     }
+
+    button {
+        background-color: #ccc;
+        width: 50px;
+        height: 50px;
+        margin: 50px auto;
+        display: block;
+        cursor: pointer;
+        outline: none;
+        border-style: dashed;
+        border-color: #fff;
+        color: green;
+    }
 </style>
+
 <body>
     <div id="box"></div>
     <button onclick="localStorage['map']=JSON.stringify(map)">保存</button>
+    <button onclick="localStorage.removeItem('map');">清除</button>
 </body>
 <script>
     var box=document.getElementById('box')
@@ -46,31 +65,33 @@
             if(map[y*100+x]===1){
                 ele.style.backgroundColor='#000'
             }
-            ele.addEventListener('mousemove',function(){
-                if(mouseenter){
-                    if(clear){
-                        ele.classList.remove('color-map')
-                        map[y*100+x]=0
-                        console.log(1);
-                    }else{
-                        ele.classList.add('color-map')
-                        ele.style.backgroundColor='#000'
-                        map[y*100+x]=1
-                        // console.log(2,map);
+        
+                ele.addEventListener('mousemove', function () {
+                    if (mouseenter) {
+                        if (clear) {
+                            ele.classList.remove('color-map')
+                            map[x * 100 + y] = 0
+                        } else {
+                            ele.classList.add('color-map')
+                            ele.style.backgroundColor = '#000'
+                            map[x * 100 + y] = 1
+                            // console.log(2,map);
+                        }
                     }
-                }
-            },{once:true})
+                }, { once: true })
+            }
         }
-    }
-    box.addEventListener('mousedown',function(e){
-        mouseenter=true
+
+    window.addEventListener('mousedown', function (e) {
+        mouseenter = true
         console.log(e.which);
-        clear=(e.which==3)
+        clear = (e.which == 3)
+        console.log(true);
     })
-    box.addEventListener('mouseup',function(){
-        mouseenter=false
+    window.addEventListener('mouseup', function () {
+        mouseenter = false
     })
-    box.addEventListener('contextmenu',function(e){
+    window.addEventListener('contextmenu', function (e) {
         e.preventDefault()
     })
 
@@ -103,4 +124,5 @@
     }
 
 </script>
+
 </html>
