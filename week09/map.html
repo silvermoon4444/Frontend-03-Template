@@ -19,6 +19,7 @@
     #box{
         width: 700px;
         margin: 0 auto;
+        font-size: 0;
     }
     *{
         margin: 0;
@@ -37,24 +38,24 @@
     var map=localStorage['map']?JSON.parse(localStorage['map']):Array(10000).fill(0)
     var clear=false
     var mouseenter=false
-    for(let x=0;x<100;x++){
-        for(let y=0;y<100;y++){
+    for(let y=0;y<100;y++){
+        for(let x=0;x<100;x++){
             let ele= document.createElement('div')
             ele.classList.add('cell')
             box.appendChild(ele)
-            if(map[x*100+y]===1){
+            if(map[y*100+x]===1){
                 ele.style.backgroundColor='#000'
             }
             ele.addEventListener('mousemove',function(){
                 if(mouseenter){
                     if(clear){
                         ele.classList.remove('color-map')
-                        map[x*100+y]=0
+                        map[y*100+x]=0
                         console.log(1);
                     }else{
                         ele.classList.add('color-map')
                         ele.style.backgroundColor='#000'
-                        map[x*100+y]=1
+                        map[y*100+x]=1
                         // console.log(2,map);
                     }
                 }
@@ -72,6 +73,34 @@
     box.addEventListener('contextmenu',function(e){
         e.preventDefault()
     })
+
+    function path(map,start,end){
+        var queue=[start]
+
+        function insert(x,y){
+            if(x>100||x<0||y>100||y<0){
+                return
+            }
+            else if(map[y*100+x]){
+                return
+            }else{
+                map[y*100+x]=2
+                queue.push([x,y])
+            }
+        }
+
+        while(true){
+            var [x,y]=queue.shift()
+            console.log(x,y);
+            if(x===end[0]&y===end[1]){
+                return true
+            }
+            insert(x-1,y)
+            insert(x+1,y)
+            insert(x,y+1)
+            insert(x,y-1)
+        }
+    }
 
 </script>
 </html>
