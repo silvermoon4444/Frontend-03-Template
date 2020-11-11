@@ -42,23 +42,27 @@ class Carousel extends Component {
             let move = (e) => {
                 let disPosX = e.clientX - startPosX
 
-                let current=position-((disPosX-disPosX%500)/500)
+                let current = position - ((disPosX - disPosX % 500) / 500)//? 取整 翻到第几个图片  对比 position - Math.round(disPosX / 500)后优化
 
-                for (const offset of [-1,0,1]) {
-                    let pos=current+offset
-                    pos=(pos+this.root.children.length)%this.root.children.length
+                for (const offset of [-1, 0, 1]) {
+                    let pos = current + offset
+                    pos = (pos + this.root.children.length) % this.root.children.length //! 得出三个图片的索引
 
                     this.root.children[pos].style.transition = 'none'
-                    this.root.children[pos].style.transform = `translateX(${-pos*500+offset*500+disPosX%500}px)`
+                    this.root.children[pos].style.transform = `translateX(${-pos * 500 + offset * 500 + disPosX % 500}px)`
                 }
 
             }
             let up = (e) => {
                 let disPosX = e.clientX - startPosX
-                position = position + Math.round(disPosX / 500)
-                for (const child of this.root.children) {
-                    child.style.transition = ''
-                    child.style.transform = `translateX(${position * 500}px)`
+                position = position - Math.round(disPosX / 500)
+
+                for (const offset of [0, -Math.sign(Math.round(disPosX / 500) - disPosX + 250 * Math.sign(disPosX))]) {   //?????
+                    let pos = position + offset
+                    pos = (pos + this.root.children.length) % this.root.children.length //! 得出三个图片的索引
+
+                    this.root.children[pos].style.transition = ''
+                    this.root.children[pos].style.transform = `translateX(${-pos * 500 + offset * 500}px)`
                 }
                 document.removeEventListener('mousemove', move)
                 document.removeEventListener('mouseup', up)
