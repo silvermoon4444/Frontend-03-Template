@@ -53,19 +53,19 @@
     <button onclick="localStorage.removeItem('map');">清除</button>
 </body>
 <script>
-    var box = document.getElementById('box')
-    var map = localStorage['map'] ? JSON.parse(localStorage['map']) : Array(10000).fill(0)
-    var clear = false
-    var mouseenter = false
-    function show() {
-        for (let y = 0; y < 100; y++) {
-            for (let y = 0; y < 100; y++) {
-                let ele = document.createElement('div')
-                ele.classList.add('cell')
-                box.appendChild(ele)
-                if (map[x * 100 + y] === 1) {
-                    ele.style.backgroundColor = '#000'
-                }
+    var box=document.getElementById('box')
+    var map=localStorage['map']?JSON.parse(localStorage['map']):Array(10000).fill(0)
+    var clear=false
+    var mouseenter=false
+    for(let y=0;y<100;y++){
+        for(let x=0;x<100;x++){
+            let ele= document.createElement('div')
+            ele.classList.add('cell')
+            box.appendChild(ele)
+            if(map[y*100+x]===1){
+                ele.style.backgroundColor='#000'
+            }
+        
                 ele.addEventListener('mousemove', function () {
                     if (mouseenter) {
                         if (clear) {
@@ -81,7 +81,6 @@
                 }, { once: true })
             }
         }
-    }
 
     window.addEventListener('mousedown', function (e) {
         mouseenter = true
@@ -95,7 +94,35 @@
     window.addEventListener('contextmenu', function (e) {
         e.preventDefault()
     })
-    show()
+
+    function path(map,start,end){
+        var queue=[start]
+
+        function insert(x,y){
+            if(x>100||x<0||y>100||y<0){
+                return
+            }
+            else if(map[y*100+x]){
+                return
+            }else{
+                map[y*100+x]=2
+                queue.push([x,y])
+            }
+        }
+
+        while(true){
+            var [x,y]=queue.shift()
+            console.log(x,y);
+            if(x===end[0]&y===end[1]){
+                return true
+            }
+            insert(x-1,y)
+            insert(x+1,y)
+            insert(x,y+1)
+            insert(x,y-1)
+        }
+    }
+
 </script>
 
 </html>
